@@ -125,12 +125,25 @@ class GameScene: SKScene {
   }
   
   private func createTotalYenLabel() {
+    totalYen = 0
     totalYenLabel = UILabel()
     totalYenLabel?.textColor = .white
+    totalYenLabel?.text = "\(totalYen ?? 0)"
+    totalYenLabel?.translatesAutoresizingMaskIntoConstraints = false
+    view?.addSubview(totalYenLabel!)
+    totalYenLabel?.topAnchor.constraint(equalTo: levelProgressBar!.bottomAnchor, constant: 20).isActive = true
+    totalYenLabel?.leadingAnchor.constraint(equalTo: levelLabel!.leadingAnchor).isActive = true
   }
   
   private func createYenPerSecLabel() {
-    
+    yenPerSec = 0
+    yenPerSecLabel = UILabel()
+    yenPerSecLabel?.textColor = .white
+    yenPerSecLabel?.text = "\(yenPerSec ?? 0)/ sec"
+    yenPerSecLabel?.translatesAutoresizingMaskIntoConstraints = false
+    view?.addSubview(yenPerSecLabel!)
+    yenPerSecLabel?.topAnchor.constraint(equalTo: totalYenLabel!.bottomAnchor, constant: 5).isActive = true
+    yenPerSecLabel?.leadingAnchor.constraint(equalTo: levelLabel!.leadingAnchor).isActive = true
   }
   
   private func updateTotalYen() {
