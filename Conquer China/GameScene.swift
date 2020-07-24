@@ -16,8 +16,13 @@ class GameScene: SKScene {
   private var storeScrollView: UIScrollView?
   private var storeItemContainers: [UIView]?
   private var yenImage: SKSpriteNode?
+  private var levelLabel: UILabel?
+  private var level: Int?
+  private var levelProgressBar: UIProgressView?
   private var totalYenLabel: UILabel?
-  private var totalYen: Int?
+  private var totalYen: Double?
+  private var yenPerSecLabel: UILabel?
+  private var yenPerSec: Double?
   
   override func didMove(to view: SKView) {
     self.backgroundColor = UIColor(displayP3Red: 30/255, green: 30/255, blue: 37.5/255, alpha: 1.0)
@@ -27,8 +32,10 @@ class GameScene: SKScene {
     createStoreScrollView()
     createStoreItemContainers()
     createYenImage()
+    createLevelLabel()
+    createLevelProgressBar()
     createTotalYenLabel()
-    
+    createYenPerSecLabel()
   }
   
   override func update(_ currentTime: TimeInterval) {
@@ -39,9 +46,8 @@ class GameScene: SKScene {
       yenImage?.run(SKAction.scale(by: 0.95, duration: 0.05), completion: {
         self.yenImage?.run(SKAction.scale(by: 0.95, duration: 0.05).reversed())
       })
-//      score! += 1
-//      scoreLabel?.text = "\(score ?? 0)"
     }
+    updateTotalYen()
   }
   
   func addFallingYen() {
@@ -97,9 +103,39 @@ class GameScene: SKScene {
     addChild(yenImage!)
   }
   
+  private func createLevelLabel() {
+    level = 0
+    levelLabel = UILabel()
+    levelLabel?.textColor = .white
+    levelLabel?.text = "Level \(level ?? 0)"
+    levelLabel?.translatesAutoresizingMaskIntoConstraints = false
+    view?.addSubview(levelLabel!)
+    levelLabel?.topAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+    levelLabel?.leadingAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.leadingAnchor, constant: 5).isActive = true
+  }
+  
+  private func createLevelProgressBar() {
+    levelProgressBar = UIProgressView()
+    levelProgressBar?.translatesAutoresizingMaskIntoConstraints = false
+    view?.addSubview(levelProgressBar!)
+    levelProgressBar?.topAnchor.constraint(equalTo: levelLabel!.bottomAnchor, constant: 5).isActive = true
+    levelProgressBar?.leadingAnchor.constraint(equalTo: levelLabel!.leadingAnchor).isActive = true
+    levelProgressBar?.widthAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.widthAnchor, multiplier: 0.3).isActive = true
+    levelProgressBar?.heightAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.widthAnchor, multiplier: 0.05).isActive = true
+  }
+  
   private func createTotalYenLabel() {
     totalYenLabel = UILabel()
     totalYenLabel?.textColor = .white
+  }
+  
+  private func createYenPerSecLabel() {
+    
+  }
+  
+  private func updateTotalYen() {
+    totalYen? += 1
+    totalYenLabel?.text = "\(totalYen ?? 0.0)"
   }
   
   func touchDown(atPoint pos : CGPoint) {}
