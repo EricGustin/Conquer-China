@@ -108,6 +108,7 @@ class GameScene: SKScene {
     levelLabel = UILabel()
     levelLabel?.textColor = .white
     levelLabel?.text = "Level \(level ?? 0)"
+    levelLabel?.font = UIFont(name: "default", size: 22)
     levelLabel?.translatesAutoresizingMaskIntoConstraints = false
     view?.addSubview(levelLabel!)
     levelLabel?.topAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
