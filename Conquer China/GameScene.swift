@@ -16,6 +16,7 @@ class GameScene: SKScene {
   private var storeScrollView: UIScrollView?
   private var storeItemContainers: [UIView]?
   private var yenImage: SKSpriteNode?
+  private var smallYenImage: UIImageView?  // Placed to the left of the user's totalYenLabel
   private var levelLabel: UILabel?
   private var level: Int?
   private var levelProgressBar: UIProgressView?
@@ -34,6 +35,7 @@ class GameScene: SKScene {
     createYenImage()
     createLevelLabel()
     createLevelProgressBar()
+    createSmallYenImage()
     createTotalYenLabel()
     createYenPerSecLabel()
   }
@@ -125,6 +127,16 @@ class GameScene: SKScene {
     levelProgressBar?.heightAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.widthAnchor, multiplier: 0.05).isActive = true
   }
   
+  private func createSmallYenImage() {
+    smallYenImage = UIImageView(image: UIImage(named: "yenCoin@4x"))
+    smallYenImage?.translatesAutoresizingMaskIntoConstraints = false
+    view?.addSubview(smallYenImage!)
+    smallYenImage?.widthAnchor.constraint(equalToConstant: 20).isActive = true
+    smallYenImage?.heightAnchor.constraint(equalToConstant: 20).isActive = true
+    smallYenImage?.leadingAnchor.constraint(equalTo: levelLabel!.leadingAnchor).isActive = true
+    smallYenImage?.topAnchor.constraint(equalTo: levelProgressBar!.bottomAnchor, constant: 20).isActive = true
+  }
+  
   private func createTotalYenLabel() {
     totalYen = 0
     totalYenLabel = UILabel()
@@ -133,7 +145,7 @@ class GameScene: SKScene {
     totalYenLabel?.translatesAutoresizingMaskIntoConstraints = false
     view?.addSubview(totalYenLabel!)
     totalYenLabel?.topAnchor.constraint(equalTo: levelProgressBar!.bottomAnchor, constant: 20).isActive = true
-    totalYenLabel?.leadingAnchor.constraint(equalTo: levelLabel!.leadingAnchor).isActive = true
+    totalYenLabel?.leadingAnchor.constraint(equalTo: smallYenImage!.trailingAnchor, constant: 5).isActive = true
   }
   
   private func createYenPerSecLabel() {
