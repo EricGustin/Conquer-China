@@ -25,6 +25,8 @@ class GameScene: SKScene {
   private var yenPerSecLabel: UILabel?
   private var yenPerSec: Double?
   
+  private var subviewsScale = CGFloat()
+  
   override func didMove(to view: SKView) {
     self.backgroundColor = UIColor(displayP3Red: 30/255, green: 30/255, blue: 37.5/255, alpha: 1.0)
     addFallingYen()
@@ -70,6 +72,8 @@ class GameScene: SKScene {
     topBackground?.topAnchor.constraint(equalTo: view!.topAnchor).isActive = true
     topBackground?.widthAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.widthAnchor).isActive = true
     topBackground?.heightAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.heightAnchor, multiplier: 0.25).isActive = true
+    topBackground?.layoutIfNeeded()
+    subviewsScale = (topBackground!.frame.height/203)
   }
   
   private func createBottomBackground() {
@@ -110,31 +114,43 @@ class GameScene: SKScene {
     levelLabel = UILabel()
     levelLabel?.textColor = .white
     levelLabel?.text = "Level \(level ?? 0)"
-    levelLabel?.font = UIFont(name: "default", size: 22)
+    levelLabel?.font = .systemFont(ofSize: 20*subviewsScale, weight: .heavy)
     levelLabel?.translatesAutoresizingMaskIntoConstraints = false
     view?.addSubview(levelLabel!)
-    levelLabel?.topAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-    levelLabel?.leadingAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.leadingAnchor, constant: 5).isActive = true
+    levelLabel?.topAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.topAnchor, constant: 5*subviewsScale).isActive = true
+    levelLabel?.leadingAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.leadingAnchor, constant: 5*subviewsScale).isActive = true
+    levelLabel?.layoutIfNeeded()
+    print(levelLabel!.frame.height)
+    print(topBackground!.frame.height)
+    print()
   }
   
   private func createLevelProgressBar() {
     levelProgressBar = UIProgressView()
     levelProgressBar?.translatesAutoresizingMaskIntoConstraints = false
     view?.addSubview(levelProgressBar!)
-    levelProgressBar?.topAnchor.constraint(equalTo: levelLabel!.bottomAnchor, constant: 5).isActive = true
+    levelProgressBar?.topAnchor.constraint(equalTo: levelLabel!.bottomAnchor, constant: 5*subviewsScale).isActive = true
     levelProgressBar?.leadingAnchor.constraint(equalTo: levelLabel!.leadingAnchor).isActive = true
     levelProgressBar?.widthAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.widthAnchor, multiplier: 0.3).isActive = true
-    levelProgressBar?.heightAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.widthAnchor, multiplier: 0.05).isActive = true
+    levelProgressBar?.heightAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.widthAnchor, multiplier: 0.04).isActive = true
+    levelProgressBar?.layoutIfNeeded()
+    print(levelProgressBar!.frame.height)
+    print(topBackground!.frame.height)
+    print()
   }
   
   private func createSmallYenImage() {
     smallYenImage = UIImageView(image: UIImage(named: "yenCoin@4x"))
     smallYenImage?.translatesAutoresizingMaskIntoConstraints = false
     view?.addSubview(smallYenImage!)
-    smallYenImage?.widthAnchor.constraint(equalToConstant: 20).isActive = true
-    smallYenImage?.heightAnchor.constraint(equalToConstant: 20).isActive = true
+    smallYenImage?.widthAnchor.constraint(equalToConstant: 20*subviewsScale).isActive = true
+    smallYenImage?.heightAnchor.constraint(equalToConstant: 20*subviewsScale).isActive = true
     smallYenImage?.leadingAnchor.constraint(equalTo: levelLabel!.leadingAnchor).isActive = true
-    smallYenImage?.topAnchor.constraint(equalTo: levelProgressBar!.bottomAnchor, constant: 20).isActive = true
+    smallYenImage?.topAnchor.constraint(equalTo: levelProgressBar!.bottomAnchor, constant: 20*subviewsScale).isActive = true
+    smallYenImage?.layoutIfNeeded()
+    print(smallYenImage!.frame.height)
+    print(topBackground!.frame.height)
+    print()
   }
   
   private func createTotalYenLabel() {
@@ -142,10 +158,15 @@ class GameScene: SKScene {
     totalYenLabel = UILabel()
     totalYenLabel?.textColor = .white
     totalYenLabel?.text = "\(totalYen ?? 0)"
+    totalYenLabel?.font = .systemFont(ofSize: 24*subviewsScale, weight: .heavy)
     totalYenLabel?.translatesAutoresizingMaskIntoConstraints = false
     view?.addSubview(totalYenLabel!)
-    totalYenLabel?.topAnchor.constraint(equalTo: levelProgressBar!.bottomAnchor, constant: 20).isActive = true
-    totalYenLabel?.leadingAnchor.constraint(equalTo: smallYenImage!.trailingAnchor, constant: 5).isActive = true
+    totalYenLabel?.centerYAnchor.constraint(equalTo: smallYenImage!.centerYAnchor).isActive = true
+    totalYenLabel?.leadingAnchor.constraint(equalTo: smallYenImage!.trailingAnchor, constant: 5*subviewsScale).isActive = true
+    totalYenLabel?.layoutIfNeeded()
+    print(totalYenLabel!.frame.height)
+    print(topBackground!.frame.height)
+    print()
   }
   
   private func createYenPerSecLabel() {
@@ -153,10 +174,15 @@ class GameScene: SKScene {
     yenPerSecLabel = UILabel()
     yenPerSecLabel?.textColor = .white
     yenPerSecLabel?.text = "\(yenPerSec ?? 0)/ sec"
+    yenPerSecLabel?.font = .systemFont(ofSize: 14*subviewsScale, weight: .heavy)
     yenPerSecLabel?.translatesAutoresizingMaskIntoConstraints = false
     view?.addSubview(yenPerSecLabel!)
-    yenPerSecLabel?.topAnchor.constraint(equalTo: totalYenLabel!.bottomAnchor, constant: 5).isActive = true
-    yenPerSecLabel?.leadingAnchor.constraint(equalTo: levelLabel!.leadingAnchor).isActive = true
+    yenPerSecLabel?.topAnchor.constraint(equalTo: totalYenLabel!.bottomAnchor, constant: 5*subviewsScale).isActive = true
+    yenPerSecLabel?.leadingAnchor.constraint(equalTo: totalYenLabel!.leadingAnchor).isActive = true
+    yenPerSecLabel?.layoutIfNeeded()
+    print(yenPerSecLabel!.frame.height)
+    print(topBackground!.frame.height)
+    print()
   }
   
   private func updateTotalYen() {
