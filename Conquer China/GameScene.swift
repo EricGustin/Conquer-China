@@ -47,6 +47,7 @@ class GameScene: SKScene {
   
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
     if self.yenImage != nil {
+      updateLevelProgressBar()
       yenImage?.run(SKAction.scale(by: 0.95, duration: 0.05), completion: {
         self.yenImage?.run(SKAction.scale(by: 0.95, duration: 0.05).reversed())
       })
@@ -188,6 +189,19 @@ class GameScene: SKScene {
   private func updateTotalYen() {
     totalYen? += 1
     totalYenLabel?.text = "\(totalYen ?? 0.0)"
+  }
+  
+  private func updateLevelProgressBar() {
+    levelProgressBar?.setProgress(levelProgressBar!.progress + 0.05, animated: true)
+    if levelProgressBar?.progress == 1.0 {
+      levelProgressBar?.setProgress(0.0, animated: false)
+      updateLevel()
+    }
+  }
+  
+  private func updateLevel() {
+    level! += 1
+    levelLabel?.text = "Level \(level!)"
   }
   
   func touchDown(atPoint pos : CGPoint) {}
