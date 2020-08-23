@@ -128,6 +128,7 @@ class GameScene: SKScene {
   
   private func createLevelProgressBar() {
     levelProgressBar = UIProgressView()
+    levelProgressBar?.progressTintColor = .systemGreen
     levelProgressBar?.translatesAutoresizingMaskIntoConstraints = false
     view?.addSubview(levelProgressBar!)
     levelProgressBar?.topAnchor.constraint(equalTo: levelLabel!.bottomAnchor, constant: 5*subviewsScale).isActive = true
