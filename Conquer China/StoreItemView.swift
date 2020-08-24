@@ -42,8 +42,15 @@ class StoreItemView: UIView {
 }
 
 struct StoreItemsConstants {
+  static let numOfItems: Int = 5
   static let names: [String] = ["item 0", "item 1", "item 2", "item 3", "item 4"]
-  static let images: [UIImage] = [UIImage(), UIImage(), UIImage(), UIImage(), UIImage()]
+  static let images: [UIImage] = [
+    UIImage(named: "questionmark@4x")!,
+    UIImage(named: "questionmark@4x")!,
+    UIImage(named: "questionmark@4x")!,
+    UIImage(named: "questionmark@4x")!,
+    UIImage(named: "questionmark@4x")!
+  ]
   static let basePrices: [Double] = [4, 60, 720, 8640, 103680] // The price of buying items for the first time
   static let growthRates: [Double] = [1.07, 1.15, 1.14, 1.13, 1.12]
   static let productionRatesBase: [Double] = [1.67, 20, 90, 360, 2160]

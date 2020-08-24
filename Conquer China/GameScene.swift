@@ -44,6 +44,7 @@ class GameScene: SKScene {
     createSmallYenImage()
     createTotalYenLabel()
     createYenPerSecLabel()
+    createStoreItems()
   }
   
   override func update(_ currentTime: TimeInterval) {
@@ -189,6 +190,27 @@ class GameScene: SKScene {
     print(yenPerSecLabel!.frame.height)
     print(topBackground!.frame.height)
     print()
+  }
+  
+  private func createStoreItems() {
+    storeItems = [
+      StoreItemView(itemNumber: 0),
+      StoreItemView(itemNumber: 1),
+      StoreItemView(itemNumber: 2),
+      StoreItemView(itemNumber: 3),
+      StoreItemView(itemNumber: 4)
+    ]
+
+    for (index, storeItem) in storeItems!.enumerated() {
+      storeItem.backgroundColor = .yellow
+      storeItem.translatesAutoresizingMaskIntoConstraints = false
+      storeItemContainers![index].addSubview(storeItem)
+      storeItem.leadingAnchor.constraint(equalTo: storeItemContainers![index].leadingAnchor).isActive = true
+      storeItem.trailingAnchor.constraint(equalTo: storeItemContainers![index].trailingAnchor).isActive = true
+      storeItem.topAnchor.constraint(equalTo: storeItemContainers![index].topAnchor).isActive = true
+      storeItem.bottomAnchor.constraint(equalTo: storeItemContainers![index].bottomAnchor).isActive = true
+      
+    }
   }
   
   private func updateTotalYen() {
