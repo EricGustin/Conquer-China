@@ -25,6 +25,10 @@ class GameScene: SKScene {
   private var yenPerSecLabel: UILabel?
   private var yenPerSec: Double?
   
+  // Views for items in store
+  private var storeItems: [StoreItemView]?
+  
+  
   private var subviewsScale = CGFloat()
   
   override func didMove(to view: SKView) {
@@ -111,7 +115,7 @@ class GameScene: SKScene {
   }
   
   private func createLevelLabel() {
-    level = 0
+    level = 1
     levelLabel = UILabel()
     levelLabel?.textColor = .white
     levelLabel?.text = "Level \(level ?? 0)"
