@@ -6,6 +6,6 @@
 //  Copyright © 2020 Eric Gustin. All rights reserved.
 //
 
-struct GameSceneRef {
-   var gameScene: GameScene
+protocol GameSceneRef {
+  var gameScene: GameScene? { get set }
 }

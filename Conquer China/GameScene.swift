@@ -11,6 +11,8 @@ import GameplayKit
 
 public class GameScene: SKScene {
   
+  public var gameScene: GameScene?
+    
   private var topBackground: UIView?
   private var bottomBackground: UIView?
   private var storeScrollView: UIScrollView?
@@ -21,9 +23,12 @@ public class GameScene: SKScene {
   private var level: Int?
   private var levelProgressBar: UIProgressView?
   public var totalYenLabel: UILabel?
-  public var totalYen: Double?
+  public var totalYen: Int?
+  public var smallNumTotalYen: Double?
   public var yenPerSecLabel: UILabel?
-  public var yenPerSec: Double?
+  public var yenPerSec: Int?
+  
+  public var isSmallYenPerSec: Bool = true
   
   // Views for items in store
   private var storeItems: [StoreItemView]?
@@ -31,6 +36,8 @@ public class GameScene: SKScene {
   private var subviewsScale = CGFloat()
   
   public override func didMove(to view: SKView) {
+    Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(customUpdate), userInfo: nil, repeats: false)
+    self.gameScene = self
     self.backgroundColor = UIColor(displayP3Red: 30/255, green: 30/255, blue: 37.5/255, alpha: 1.0)
     addFallingYen()
     createTopBackground()
@@ -47,6 +54,27 @@ public class GameScene: SKScene {
   }
   
   public override func update(_ currentTime: TimeInterval) {
+  }
+  
+  @objc public func customUpdate(_ currentTime: TimeInterval) {
+    
+    if (yenPerSec ?? 0) > 0 && (yenPerSec ?? 0) < 100 {
+      smallNumTotalYen! += (Double(yenPerSec ?? 0))/100
+      totalYenLabel?.text = String(format: "%.01f", smallNumTotalYen!)
+      StoreItemView.totalYen = Int(smallNumTotalYen!)
+    }
+    else {
+      if isSmallYenPerSec && (yenPerSec ?? 0 >= 100) {
+        isSmallYenPerSec = !isSmallYenPerSec
+        totalYen = Int(smallNumTotalYen!)
+      }
+      totalYen! += (yenPerSec ?? 0)/100
+      totalYenLabel?.text = "\(totalYen!)"
+      StoreItemView.totalYen = totalYen!
+    }
+    
+    Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(customUpdate), userInfo: nil, repeats: false)
+//    var _ = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(customUpdate), userInfo: nil, repeats: false)
   }
   
   public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -160,6 +188,7 @@ public class GameScene: SKScene {
   }
   
   private func createTotalYenLabel() {
+    smallNumTotalYen = 0
     totalYen = 0
     totalYenLabel = UILabel()
     totalYenLabel?.textColor = .white
@@ -193,11 +222,11 @@ public class GameScene: SKScene {
   
   private func createStoreItems() {
     storeItems = [
-      StoreItemView(scene: self, itemNumber: 0),
-      StoreItemView(scene: self, itemNumber: 1),
-      StoreItemView(scene: self, itemNumber: 2),
-      StoreItemView(scene: self, itemNumber: 3),
-      StoreItemView(scene: self, itemNumber: 4)
+      StoreItemView(scene: &(gameScene!), itemNumber: 0),
+      StoreItemView(scene: &(gameScene!), itemNumber: 1),
+      StoreItemView(scene: &(gameScene!), itemNumber: 2),
+      StoreItemView(scene: &(gameScene!), itemNumber: 3),
+      StoreItemView(scene: &(gameScene!), itemNumber: 4)
     ]
 
     for (index, storeItem) in storeItems!.enumerated() {
@@ -213,7 +242,7 @@ public class GameScene: SKScene {
   
   private func updateTotalYen() {
     totalYen? += 1
-    totalYenLabel?.text = "\(totalYen ?? 0.0)"
+    totalYenLabel?.text = "\(totalYen ?? 0)"
   }
   
   private func updateLevelProgressBar() {

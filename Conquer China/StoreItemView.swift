@@ -9,15 +9,19 @@
 import UIKit
 
 class StoreItemView: UIView {
+  
+  public static var totalYen = 0
+  
+  
   // nextPrice = basePrice * (growthRate)**numOwned
   // totalProduction = (productionRateBase*numOwned)*multipliers  ### multipliers have yet to be implemented
   public var image: UIImageView
-  public var currentRatePerSec: KeyValuePairs<UILabel, Double>
-  public var numOwned: KeyValuePairs<UILabel, Double>
-  public var nextPrice: KeyValuePairs<UILabel, Double>
-  public var productionRatesBase: KeyValuePairs<UILabel, Double>
-  public var multiplier: Double
-  public var totalProduction: Double
+  public var currentRatePerSec: KeyValuePairs<UILabel, Int>
+  public var numOwned: (key: UILabel, value: Int)
+  public var nextPrice: (key: UILabel, value: Int)
+  public var productionRatesBase: KeyValuePairs<UILabel, Int>
+  public var multiplier: Int
+  public var totalProduction: Int
   public var itemNumber: Int
   public var verticalStack: UIStackView = {
     let stack = UIStackView()
@@ -29,15 +33,16 @@ class StoreItemView: UIView {
   
   var gameScene: GameScene
   
-  required init(scene: GameScene, itemNumber: Int) {
+  required init(scene: inout GameScene, itemNumber: Int) {
     self.gameScene = scene
     self.image = UIImageView(image: StoreItemsConstants.images[itemNumber])
     self.currentRatePerSec = [UILabel(): 0]
-    self.numOwned = [UILabel(): 0]
-    self.nextPrice = [UILabel(): StoreItemsConstants.basePrices[itemNumber] * pow(StoreItemsConstants.growthRates[itemNumber], numOwned[0].value)]
+    self.numOwned = (UILabel(), 0)
+    let doubleNextPrice = Double(StoreItemsConstants.basePrices[itemNumber]) * pow(StoreItemsConstants.growthRates[itemNumber], Double(numOwned.value))
+    self.nextPrice = (UILabel(), Int(doubleNextPrice))
     self.productionRatesBase = [UILabel(): StoreItemsConstants.productionRatesBase[itemNumber]]
     self.multiplier = 1
-    self.totalProduction = productionRatesBase[0].value * numOwned[0].value * multiplier
+    self.totalProduction = productionRatesBase[0].value * numOwned.value * multiplier
     self.itemNumber = itemNumber
     
     super.init(frame: .zero)
@@ -52,16 +57,15 @@ class StoreItemView: UIView {
   private func setUpSubviews() {
     
     currentRatePerSec[0].key.text = "\(productionRatesBase[0].value)/sec"
-    numOwned[0].key.text = "\(Int(numOwned[0].value))"
-//    numOwned[0].key.addObserver(self, forKeyPath: "text", options: [.old, .new], context: nil)
-    nextPrice[0].key.text = "\(nextPrice[0].value) yen"
+    numOwned.key.text = "\(Int(numOwned.value))"
+    nextPrice.key.text = "\(nextPrice.value) yen"
     productionRatesBase[0].key.text = "+\(productionRatesBase[0].value)/sec"
     
     self.addSubview(verticalStack)
     verticalStack.addArrangedSubview(image)
     verticalStack.addArrangedSubview(currentRatePerSec[0].key)
-    verticalStack.addArrangedSubview(numOwned[0].key)
-    verticalStack.addArrangedSubview(nextPrice[0].key)
+    verticalStack.addArrangedSubview(numOwned.key)
+    verticalStack.addArrangedSubview(nextPrice.key)
     verticalStack.addArrangedSubview(productionRatesBase[0].key)
     verticalStack.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
     verticalStack.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
@@ -69,38 +73,40 @@ class StoreItemView: UIView {
     verticalStack.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
   }
   
-//  override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-//    if keyPath == "text" {
-//
-//    }
-//  }
-  
   @objc func itemClicked() {
-    if gameScene.totalYen ?? 0 >= nextPrice[0].value {
-      print("Buying an item!")
+    print(StoreItemView.totalYen)
+    if StoreItemView.totalYen >= nextPrice.value {
       buyItem()
     }
   }
   
   private func buyItem() {
     if let _ = gameScene.totalYen {
-      gameScene.totalYen! -= nextPrice[0].value
+      gameScene.totalYen! -= nextPrice.value
       gameScene.totalYenLabel?.text = "\(gameScene.totalYen!)"
     }
     if let _ = gameScene.yenPerSec {
       gameScene.yenPerSec! += productionRatesBase[0].value
-      gameScene.yenPerSecLabel?.text = "\(productionRatesBase[0].value)/sec"
+      gameScene.yenPerSecLabel?.text = "\(gameScene.yenPerSec!)/sec"
     }
-    numOwned = [UILabel(): numOwned[0].value + 1]
-    numOwned[0].key.text = "\(numOwned[0].value)"
     updateItem()
   }
   
   private func updateItem() {
-    
+    numOwned.value = numOwned.value + 1
+    numOwned.key.text = "\(Int(numOwned.value))"
+    let doubleNextPrice = Double(StoreItemsConstants.basePrices[itemNumber]) * pow(StoreItemsConstants.growthRates[itemNumber], Double(numOwned.value))
+    nextPrice.value = Int(doubleNextPrice)
+    nextPrice.key.text = "\(nextPrice.value) yen"
   }
   
 }
+
+//extension StoreItemView: NSCopying {
+//  func copy(with zone: NSZone? = nil) -> Any {
+//    let
+//  }
+//}
 
 public struct StoreItemsConstants {
   static let numOfItems: Int = 5
@@ -112,7 +118,7 @@ public struct StoreItemsConstants {
     UIImage(named: "questionmark@4x")!,
     UIImage(named: "questionmark@4x")!
   ]
-  static let basePrices: [Double] = [4, 60, 720, 8640, 103680] // The price of buying items for the first time
+  static let basePrices: [Int] = [4, 60, 720, 8640, 103680] // The price of buying items for the first time
   static let growthRates: [Double] = [1.07, 1.15, 1.14, 1.13, 1.12]
-  static let productionRatesBase: [Double] = [1.67, 20, 90, 360, 2160]
+  static let productionRatesBase: [Int] = [2, 20, 90, 360, 2160]
 }
