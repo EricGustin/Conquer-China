@@ -27,8 +27,10 @@ class StoreItemView: UIView {
     return stack
   }()
   
+  var gameScene: GameScene
   
-  required init(itemNumber: Int) {
+  required init(scene: GameScene, itemNumber: Int) {
+    self.gameScene = scene
     self.image = UIImageView(image: StoreItemsConstants.images[itemNumber])
     self.currentRatePerSec = [UILabel(): 0]
     self.numOwned = [UILabel(): 0]
@@ -39,6 +41,7 @@ class StoreItemView: UIView {
     self.itemNumber = itemNumber
     
     super.init(frame: .zero)
+    self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(itemClicked)))
     setUpSubviews()
   }
   
@@ -50,6 +53,7 @@ class StoreItemView: UIView {
     
     currentRatePerSec[0].key.text = "\(productionRatesBase[0].value)/sec"
     numOwned[0].key.text = "\(Int(numOwned[0].value))"
+//    numOwned[0].key.addObserver(self, forKeyPath: "text", options: [.old, .new], context: nil)
     nextPrice[0].key.text = "\(nextPrice[0].value) yen"
     productionRatesBase[0].key.text = "+\(productionRatesBase[0].value)/sec"
     
@@ -65,9 +69,40 @@ class StoreItemView: UIView {
     verticalStack.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
   }
   
+//  override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+//    if keyPath == "text" {
+//
+//    }
+//  }
+  
+  @objc func itemClicked() {
+    if gameScene.totalYen ?? 0 >= nextPrice[0].value {
+      print("Buying an item!")
+      buyItem()
+    }
+  }
+  
+  private func buyItem() {
+    if let _ = gameScene.totalYen {
+      gameScene.totalYen! -= nextPrice[0].value
+      gameScene.totalYenLabel?.text = "\(gameScene.totalYen!)"
+    }
+    if let _ = gameScene.yenPerSec {
+      gameScene.yenPerSec! += productionRatesBase[0].value
+      gameScene.yenPerSecLabel?.text = "\(productionRatesBase[0].value)/sec"
+    }
+    numOwned = [UILabel(): numOwned[0].value + 1]
+    numOwned[0].key.text = "\(numOwned[0].value)"
+    updateItem()
+  }
+  
+  private func updateItem() {
+    
+  }
+  
 }
 
-struct StoreItemsConstants {
+public struct StoreItemsConstants {
   static let numOfItems: Int = 5
   static let names: [String] = ["item 0", "item 1", "item 2", "item 3", "item 4"]
   static let images: [UIImage] = [

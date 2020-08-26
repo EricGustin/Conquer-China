@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+public class GameScene: SKScene {
   
   private var topBackground: UIView?
   private var bottomBackground: UIView?
@@ -20,18 +20,17 @@ class GameScene: SKScene {
   private var levelLabel: UILabel?
   private var level: Int?
   private var levelProgressBar: UIProgressView?
-  private var totalYenLabel: UILabel?
-  private var totalYen: Double?
-  private var yenPerSecLabel: UILabel?
-  private var yenPerSec: Double?
+  public var totalYenLabel: UILabel?
+  public var totalYen: Double?
+  public var yenPerSecLabel: UILabel?
+  public var yenPerSec: Double?
   
   // Views for items in store
   private var storeItems: [StoreItemView]?
   
-  
   private var subviewsScale = CGFloat()
   
-  override func didMove(to view: SKView) {
+  public override func didMove(to view: SKView) {
     self.backgroundColor = UIColor(displayP3Red: 30/255, green: 30/255, blue: 37.5/255, alpha: 1.0)
     addFallingYen()
     createTopBackground()
@@ -47,10 +46,10 @@ class GameScene: SKScene {
     createStoreItems()
   }
   
-  override func update(_ currentTime: TimeInterval) {
+  public override func update(_ currentTime: TimeInterval) {
   }
   
-  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+  public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
     if self.yenImage != nil {
       updateLevelProgressBar()
       yenImage?.run(SKAction.scale(by: 0.95, duration: 0.05), completion: {
@@ -194,11 +193,11 @@ class GameScene: SKScene {
   
   private func createStoreItems() {
     storeItems = [
-      StoreItemView(itemNumber: 0),
-      StoreItemView(itemNumber: 1),
-      StoreItemView(itemNumber: 2),
-      StoreItemView(itemNumber: 3),
-      StoreItemView(itemNumber: 4)
+      StoreItemView(scene: self, itemNumber: 0),
+      StoreItemView(scene: self, itemNumber: 1),
+      StoreItemView(scene: self, itemNumber: 2),
+      StoreItemView(scene: self, itemNumber: 3),
+      StoreItemView(scene: self, itemNumber: 4)
     ]
 
     for (index, storeItem) in storeItems!.enumerated() {
@@ -233,7 +232,7 @@ class GameScene: SKScene {
   func touchDown(atPoint pos : CGPoint) {}
   func touchMoved(toPoint pos : CGPoint) {}
   func touchUp(atPoint pos : CGPoint) {}
-  override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {}
-  override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {}
-  override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {}
+  public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {}
+  public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {}
+  public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {}
 }
