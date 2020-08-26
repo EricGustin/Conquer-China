@@ -103,7 +103,7 @@ class GameScene: SKScene {
   private func createStoreItemContainers() {
     storeItemContainers = [UIView]()
     for i in 0...17 {
-      storeItemContainers?.append(UIView(frame: CGRect(x: CGFloat(i) * view!.safeAreaLayoutGuide.layoutFrame.width/3, y: 0, width: view!.safeAreaLayoutGuide.layoutFrame.width/3 - 1, height: UIScreen.main.bounds.width)))
+      storeItemContainers?.append(UIView(frame: CGRect(x: CGFloat(i) * view!.safeAreaLayoutGuide.layoutFrame.width/3, y: 0, width: view!.safeAreaLayoutGuide.layoutFrame.width/3 - 1, height: UIScreen.main.bounds.height/5)))
       storeItemContainers?[i].backgroundColor = .white
       storeScrollView?.addSubview(storeItemContainers![i])
     }
@@ -202,7 +202,6 @@ class GameScene: SKScene {
     ]
 
     for (index, storeItem) in storeItems!.enumerated() {
-      storeItem.backgroundColor = .yellow
       storeItem.translatesAutoresizingMaskIntoConstraints = false
       storeItemContainers![index].addSubview(storeItem)
       storeItem.leadingAnchor.constraint(equalTo: storeItemContainers![index].leadingAnchor).isActive = true

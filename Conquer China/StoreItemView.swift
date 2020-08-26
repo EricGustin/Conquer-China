@@ -14,29 +14,55 @@ class StoreItemView: UIView {
   public var image: UIImageView
   public var currentRatePerSec: KeyValuePairs<UILabel, Double>
   public var numOwned: KeyValuePairs<UILabel, Double>
-  public var nextPrice: Double
+  public var nextPrice: KeyValuePairs<UILabel, Double>
   public var productionRatesBase: KeyValuePairs<UILabel, Double>
   public var multiplier: Double
   public var totalProduction: Double
   public var itemNumber: Int
+  public var verticalStack: UIStackView = {
+    let stack = UIStackView()
+    stack.axis = .vertical
+    stack.alignment = .center
+    stack.translatesAutoresizingMaskIntoConstraints = false
+    return stack
+  }()
   
   
   required init(itemNumber: Int) {
     self.image = UIImageView(image: StoreItemsConstants.images[itemNumber])
     self.currentRatePerSec = [UILabel(): 0]
     self.numOwned = [UILabel(): 0]
-    self.nextPrice = StoreItemsConstants.basePrices[itemNumber] * pow(StoreItemsConstants.growthRates[itemNumber], numOwned[0].value)
+    self.nextPrice = [UILabel(): StoreItemsConstants.basePrices[itemNumber] * pow(StoreItemsConstants.growthRates[itemNumber], numOwned[0].value)]
     self.productionRatesBase = [UILabel(): StoreItemsConstants.productionRatesBase[itemNumber]]
     self.multiplier = 1
     self.totalProduction = productionRatesBase[0].value * numOwned[0].value * multiplier
     self.itemNumber = itemNumber
-    super.init(frame: .zero)
-  
     
+    super.init(frame: .zero)
+    setUpSubviews()
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  private func setUpSubviews() {
+    
+    currentRatePerSec[0].key.text = "\(productionRatesBase[0].value)/sec"
+    numOwned[0].key.text = "\(Int(numOwned[0].value))"
+    nextPrice[0].key.text = "\(nextPrice[0].value) yen"
+    productionRatesBase[0].key.text = "+\(productionRatesBase[0].value)/sec"
+    
+    self.addSubview(verticalStack)
+    verticalStack.addArrangedSubview(image)
+    verticalStack.addArrangedSubview(currentRatePerSec[0].key)
+    verticalStack.addArrangedSubview(numOwned[0].key)
+    verticalStack.addArrangedSubview(nextPrice[0].key)
+    verticalStack.addArrangedSubview(productionRatesBase[0].key)
+    verticalStack.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+    verticalStack.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+    verticalStack.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+    verticalStack.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
   }
   
 }
