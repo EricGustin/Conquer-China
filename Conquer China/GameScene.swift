@@ -73,24 +73,7 @@ public class GameScene: SKScene {
       totalYen = totalYen!
     }
     
-    
-//    if (yenPerSec ?? 0) > 0 && (yenPerSec ?? 0) < 100 {
-//      smallNumTotalYen! += (Double(yenPerSec ?? 0))/100
-//      totalYenLabel?.text = String(format: "%.01f", smallNumTotalYen!)
-//      StoreItemView.totalYen = Int(smallNumTotalYen!)
-//    }
-//    else {
-//      if isSmallYenPerSec && (yenPerSec ?? 0 >= 100) {
-//        isSmallYenPerSec = !isSmallYenPerSec
-//        totalYen = Int(smallNumTotalYen!)
-//      }
-//      totalYen! += (yenPerSec ?? 0)/100
-//      totalYenLabel?.text = "\(totalYen!)"
-//      StoreItemView.totalYen = totalYen!
-//    }
-    
     Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(customUpdate), userInfo: nil, repeats: false)
-//    var _ = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(customUpdate), userInfo: nil, repeats: false)
   }
   
   public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

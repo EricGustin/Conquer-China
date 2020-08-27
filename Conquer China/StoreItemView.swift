@@ -69,41 +69,7 @@ class StoreItemView: UIView {
     verticalStack.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
     verticalStack.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
   }
-  
-//  @objc func itemClicked() {
-//    print(StoreItemView.totalYen)
-//    if gameScene.totalYen! >= nextPrice.value {
-//      buyItem()
-//    }
-//  }
-//
-//  private func buyItem() {
-//    if let _ = gameScene.totalYen {
-//      gameScene.totalYen! -= nextPrice.value
-//      gameScene.totalYenLabel?.text = "\(gameScene.totalYen!)"
-//    }
-//    if let _ = gameScene.yenPerSec {
-//      gameScene.yenPerSec! += productionRatesBase[0].value
-//      gameScene.yenPerSecLabel?.text = "\(gameScene.yenPerSec!)/sec"
-//    }
-//    updateItem()
-//  }
-//
-//  private func updateItem() {
-//    numOwned.value = numOwned.value + 1
-//    numOwned.key.text = "\(Int(numOwned.value))"
-//    let doubleNextPrice = Double(StoreItemsConstants.basePrices[itemNumber]) * pow(StoreItemsConstants.growthRates[itemNumber], Double(numOwned.value))
-//    nextPrice.value = Int(doubleNextPrice)
-//    nextPrice.key.text = "\(nextPrice.value) yen"
-//  }
-  
 }
-
-//extension StoreItemView: NSCopying {
-//  func copy(with zone: NSZone? = nil) -> Any {
-//    let
-//  }
-//}
 
 public struct StoreItemsConstants {
   static let numOfItems: Int = 5
