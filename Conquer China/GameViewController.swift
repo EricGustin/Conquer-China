@@ -17,15 +17,21 @@ class GameViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     addFallingYen()
+    
+    
+    
     if let view = self.view as! SKView? {
       // Load the SKScene from 'GameScene.sks'
-      if let scene = SKScene(fileNamed: "GameScene") {
-        // Set the scale mode to scale to fit the window
-        scene.scaleMode = .aspectFill
-        scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        // Present the scene
-        view.presentScene(scene)
+//      if SKScene(fileNamed: "GameScene") != nil {
+      if var scene = SKScene(fileNamed: "GameScene") {
+      // Set the scale mode to scale to fit the window
+      scene.scaleMode = .aspectFill
+      scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+      // Present the scene
+      view.presentScene(scene)
       }
+      
+      
       
       view.ignoresSiblingOrder = true
       

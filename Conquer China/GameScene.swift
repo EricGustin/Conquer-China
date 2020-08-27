@@ -57,21 +57,37 @@ public class GameScene: SKScene {
   }
   
   @objc public func customUpdate(_ currentTime: TimeInterval) {
-    
-    if (yenPerSec ?? 0) > 0 && (yenPerSec ?? 0) < 100 {
-      smallNumTotalYen! += (Double(yenPerSec ?? 0))/100
-      totalYenLabel?.text = String(format: "%.01f", smallNumTotalYen!)
-      StoreItemView.totalYen = Int(smallNumTotalYen!)
-    }
-    else {
-      if isSmallYenPerSec && (yenPerSec ?? 0 >= 100) {
+    if isSmallYenPerSec {
+      if (yenPerSec ?? 0) < 100 {
+        smallNumTotalYen! += (Double(yenPerSec ?? 0))/100
+        totalYenLabel?.text = String(format: "%.01f", smallNumTotalYen!)
+        totalYen = Int(smallNumTotalYen!)
+      }
+      else {
         isSmallYenPerSec = !isSmallYenPerSec
         totalYen = Int(smallNumTotalYen!)
       }
+    } else {
       totalYen! += (yenPerSec ?? 0)/100
       totalYenLabel?.text = "\(totalYen!)"
-      StoreItemView.totalYen = totalYen!
+      totalYen = totalYen!
     }
+    
+    
+//    if (yenPerSec ?? 0) > 0 && (yenPerSec ?? 0) < 100 {
+//      smallNumTotalYen! += (Double(yenPerSec ?? 0))/100
+//      totalYenLabel?.text = String(format: "%.01f", smallNumTotalYen!)
+//      StoreItemView.totalYen = Int(smallNumTotalYen!)
+//    }
+//    else {
+//      if isSmallYenPerSec && (yenPerSec ?? 0 >= 100) {
+//        isSmallYenPerSec = !isSmallYenPerSec
+//        totalYen = Int(smallNumTotalYen!)
+//      }
+//      totalYen! += (yenPerSec ?? 0)/100
+//      totalYenLabel?.text = "\(totalYen!)"
+//      StoreItemView.totalYen = totalYen!
+//    }
     
     Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(customUpdate), userInfo: nil, repeats: false)
 //    var _ = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(customUpdate), userInfo: nil, repeats: false)
@@ -153,9 +169,6 @@ public class GameScene: SKScene {
     levelLabel?.topAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.topAnchor, constant: 5*subviewsScale).isActive = true
     levelLabel?.leadingAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.leadingAnchor, constant: 5*subviewsScale).isActive = true
     levelLabel?.layoutIfNeeded()
-    print(levelLabel!.frame.height)
-    print(topBackground!.frame.height)
-    print()
   }
   
   private func createLevelProgressBar() {
@@ -168,9 +181,6 @@ public class GameScene: SKScene {
     levelProgressBar?.widthAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.widthAnchor, multiplier: 0.3).isActive = true
     levelProgressBar?.heightAnchor.constraint(equalTo: view!.safeAreaLayoutGuide.widthAnchor, multiplier: 0.04).isActive = true
     levelProgressBar?.layoutIfNeeded()
-    print(levelProgressBar!.frame.height)
-    print(topBackground!.frame.height)
-    print()
   }
   
   private func createSmallYenImage() {
@@ -182,9 +192,6 @@ public class GameScene: SKScene {
     smallYenImage?.leadingAnchor.constraint(equalTo: levelLabel!.leadingAnchor).isActive = true
     smallYenImage?.topAnchor.constraint(equalTo: levelProgressBar!.bottomAnchor, constant: 20*subviewsScale).isActive = true
     smallYenImage?.layoutIfNeeded()
-    print(smallYenImage!.frame.height)
-    print(topBackground!.frame.height)
-    print()
   }
   
   private func createTotalYenLabel() {
@@ -199,9 +206,6 @@ public class GameScene: SKScene {
     totalYenLabel?.centerYAnchor.constraint(equalTo: smallYenImage!.centerYAnchor).isActive = true
     totalYenLabel?.leadingAnchor.constraint(equalTo: smallYenImage!.trailingAnchor, constant: 5*subviewsScale).isActive = true
     totalYenLabel?.layoutIfNeeded()
-    print(totalYenLabel!.frame.height)
-    print(topBackground!.frame.height)
-    print()
   }
   
   private func createYenPerSecLabel() {
@@ -215,12 +219,10 @@ public class GameScene: SKScene {
     yenPerSecLabel?.topAnchor.constraint(equalTo: totalYenLabel!.bottomAnchor, constant: 5*subviewsScale).isActive = true
     yenPerSecLabel?.leadingAnchor.constraint(equalTo: totalYenLabel!.leadingAnchor).isActive = true
     yenPerSecLabel?.layoutIfNeeded()
-    print(yenPerSecLabel!.frame.height)
-    print(topBackground!.frame.height)
-    print()
   }
   
   private func createStoreItems() {
+
     storeItems = [
       StoreItemView(scene: &(gameScene!), itemNumber: 0),
       StoreItemView(scene: &(gameScene!), itemNumber: 1),
@@ -230,6 +232,8 @@ public class GameScene: SKScene {
     ]
 
     for (index, storeItem) in storeItems!.enumerated() {
+      storeItem.tag = index
+      storeItem.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(itemClicked)))
       storeItem.translatesAutoresizingMaskIntoConstraints = false
       storeItemContainers![index].addSubview(storeItem)
       storeItem.leadingAnchor.constraint(equalTo: storeItemContainers![index].leadingAnchor).isActive = true
@@ -240,9 +244,57 @@ public class GameScene: SKScene {
     }
   }
   
+  @objc func itemClicked(sender: UITapGestureRecognizer) {
+    if let item = sender.view {
+      if isSmallYenPerSec {
+        if smallNumTotalYen! >= Double((item as! StoreItemView).nextPrice.value) {
+          buyItem(item: item as! StoreItemView)
+        }
+      }
+      else {
+        if totalYen! >= (item as! StoreItemView).nextPrice.value {
+          buyItem(item: item as! StoreItemView)
+        }
+      }
+    }
+  }
+  
+  private func buyItem(item: StoreItemView) {
+    if isSmallYenPerSec {
+      smallNumTotalYen! -= Double(item.nextPrice.value)
+      totalYenLabel?.text = "\(smallNumTotalYen!)"
+      yenPerSec! += item.productionRatesBase[0].value
+      yenPerSecLabel?.text = "\(yenPerSec!)/sec"
+    }
+    else {
+      totalYen! -= item.nextPrice.value
+      totalYenLabel?.text = "\(totalYen!)"
+      yenPerSec! += item.productionRatesBase[0].value
+      yenPerSecLabel?.text = "\(yenPerSec!)/sec"
+    }
+    updateItem(item: item)
+  }
+  
+  private func updateItem(item: StoreItemView) {
+    item.numOwned.value = item.numOwned.value + 1
+    item.numOwned.key.text = "\(Int(item.numOwned.value))"
+    let doubleNextPrice = Double(StoreItemsConstants.basePrices[item.tag]) * pow(StoreItemsConstants.growthRates[item.tag], Double(item.numOwned.value))
+    item.nextPrice.value = Int(doubleNextPrice)
+    item.nextPrice.key.text = "\(item.nextPrice.value) yen"
+  }
+  
   private func updateTotalYen() {
-    totalYen? += 1
-    totalYenLabel?.text = "\(totalYen ?? 0)"
+    if isSmallYenPerSec {
+      smallNumTotalYen? += 1
+      totalYenLabel?.text = "\(smallNumTotalYen!)"
+      totalYenLabel?.layoutIfNeeded()
+      totalYenLabel?.updateFocusIfNeeded()
+      totalYenLabel?.setNeedsLayout()
+    }
+    else {
+      totalYen? += 1
+      totalYenLabel?.text = "\(totalYen ?? 0)"
+    }
   }
   
   private func updateLevelProgressBar() {

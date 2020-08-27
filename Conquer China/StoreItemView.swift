@@ -9,10 +9,7 @@
 import UIKit
 
 class StoreItemView: UIView {
-  
-  public static var totalYen = 0
-  
-  
+
   // nextPrice = basePrice * (growthRate)**numOwned
   // totalProduction = (productionRateBase*numOwned)*multipliers  ### multipliers have yet to be implemented
   public var image: UIImageView
@@ -46,7 +43,7 @@ class StoreItemView: UIView {
     self.itemNumber = itemNumber
     
     super.init(frame: .zero)
-    self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(itemClicked)))
+//    self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(itemClicked)))
     setUpSubviews()
   }
   
@@ -73,32 +70,32 @@ class StoreItemView: UIView {
     verticalStack.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
   }
   
-  @objc func itemClicked() {
-    print(StoreItemView.totalYen)
-    if StoreItemView.totalYen >= nextPrice.value {
-      buyItem()
-    }
-  }
-  
-  private func buyItem() {
-    if let _ = gameScene.totalYen {
-      gameScene.totalYen! -= nextPrice.value
-      gameScene.totalYenLabel?.text = "\(gameScene.totalYen!)"
-    }
-    if let _ = gameScene.yenPerSec {
-      gameScene.yenPerSec! += productionRatesBase[0].value
-      gameScene.yenPerSecLabel?.text = "\(gameScene.yenPerSec!)/sec"
-    }
-    updateItem()
-  }
-  
-  private func updateItem() {
-    numOwned.value = numOwned.value + 1
-    numOwned.key.text = "\(Int(numOwned.value))"
-    let doubleNextPrice = Double(StoreItemsConstants.basePrices[itemNumber]) * pow(StoreItemsConstants.growthRates[itemNumber], Double(numOwned.value))
-    nextPrice.value = Int(doubleNextPrice)
-    nextPrice.key.text = "\(nextPrice.value) yen"
-  }
+//  @objc func itemClicked() {
+//    print(StoreItemView.totalYen)
+//    if gameScene.totalYen! >= nextPrice.value {
+//      buyItem()
+//    }
+//  }
+//
+//  private func buyItem() {
+//    if let _ = gameScene.totalYen {
+//      gameScene.totalYen! -= nextPrice.value
+//      gameScene.totalYenLabel?.text = "\(gameScene.totalYen!)"
+//    }
+//    if let _ = gameScene.yenPerSec {
+//      gameScene.yenPerSec! += productionRatesBase[0].value
+//      gameScene.yenPerSecLabel?.text = "\(gameScene.yenPerSec!)/sec"
+//    }
+//    updateItem()
+//  }
+//
+//  private func updateItem() {
+//    numOwned.value = numOwned.value + 1
+//    numOwned.key.text = "\(Int(numOwned.value))"
+//    let doubleNextPrice = Double(StoreItemsConstants.basePrices[itemNumber]) * pow(StoreItemsConstants.growthRates[itemNumber], Double(numOwned.value))
+//    nextPrice.value = Int(doubleNextPrice)
+//    nextPrice.key.text = "\(nextPrice.value) yen"
+//  }
   
 }
 
